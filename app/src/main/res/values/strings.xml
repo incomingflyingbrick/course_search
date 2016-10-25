@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CourseraSearch</string>
+    <string name="search_hint">You need to study!</string>
+</resources>
