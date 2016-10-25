@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 lt application files
+=======
+# Built application files
+>>>>>>> cc11e1b705cab96c07597f756239ab0d690b147b
 *.apk
 *.ap_
 
