@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,10 +17,13 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
 
+    private CoursePresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPresenter = new CoursePresenter(this);
     }
 
     @Override
@@ -46,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+
+
         });
 
+
+    }
+
+    public void updateCourseList(List<Model> datalist){
 
     }
 
