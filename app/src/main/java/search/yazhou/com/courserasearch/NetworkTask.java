@@ -1,6 +1,10 @@
 package search.yazhou.com.courserasearch;
 
-import android.graphics.PorterDuff;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,10 +17,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-/**
- * Created by umeng on 10/26/16.
- */
 
 public class NetworkTask {
 
@@ -87,31 +87,28 @@ public class NetworkTask {
 
     }
 
-    private void parseSepcialization(Specialization specialization, JSONObject jsonObject) {
-        specialization.setDiscription(jsonObject.optString("description"));
-        specialization.setId(jsonObject.optString("id"));
-        specialization.setSpecializationId(jsonObject.optString("id"));
-        specialization.setPhotoUrl(jsonObject.optString("logo"));
-        specialization.setPartnerId(jsonObject.optString("partnerIds"));
-        JSONArray array = jsonObject.optJSONArray("courseIds");
-        if (array != null) {
-            for (int i = 0; i < array.length(); i++) {
-                if () {
+    private Specialization parseSepcialization(Specialization specialization, JSONObject jsonObject) {
+        JSONArray obj = jsonObject.optJSONArray("elements");
+        if (obj != null) {
 
-                }
+            Gson gson = new Gson();
+            for (int i = 0; i < obj.length(); i++) {
+                JSONObject item = obj.optJSONObject(i);
+                Log.d("d",item.toString());
+                specialization = gson.fromJson(item.toString(),Specialization.class);
             }
         }
-        specialization.setCoursesIds();
+        return specialization;
     }
 
     private Model pareUni(JSONObject jsonObject, Model model) {
-        model.setPartnerId(jsonObject.optString("id"));
+        //model.setPartnerId(jsonObject.optString("id"));
         model.setUniversityName(jsonObject.optString("name"));
         return model;
     }
 
     public Course loadCourseDetail(String courseId, String field) {
-        Course course = new Course();
+        Course course = null;
         Request request = new Request.Builder()
                 .url(courseUrl + courseId + "?" + field)
                 .build();
@@ -119,16 +116,15 @@ public class NetworkTask {
 
             Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful()) {
+                course = parseCourse(course, new JSONObject(response.body().string()));
 
-                parseCourse(course, new JSONObject(response.body().string()));
             } else {
                 course = null;
             }
-        } catch (JSONException e) {
-
         } catch (IOException e) {
 
-        } catch (Exception e) {
+        } catch(JSONException e){
+
         }
 
         return course;
@@ -136,19 +132,33 @@ public class NetworkTask {
 
     public Specialization loadSpicalizationDetail(String specialId, String field) {
         Specialization specialization = new Specialization();
+        Request request = new Request.Builder()
+                .url(spcializationUrl + specialId + "?" + field)
+                .build();
+        try {
 
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                JSONObject obj = new JSONObject(response.body().string());
+                specialization = parseSepcialization(specialization, obj);
+            }else{
+                specialization = null;
+            }
+        } catch (IOException e) {
+
+        } catch(JSONException e){
+            Log.d("json",""+e.getMessage());
+        }
         return specialization;
     }
 
     private Course parseCourse(Course course, JSONObject jsonObject) {
         JSONArray obj = jsonObject.optJSONArray("elements");
         if (obj != null) {
+            Gson gson = new Gson();
             for (int i = 0; i < obj.length(); i++) {
                 JSONObject item = obj.optJSONObject(i);
-                course.setId(item.optString("id"));
-                course.setDiscription(item.optString("description"));
-                course.setPhotoUrl(item.optString("photoUrl"));
-                course.setPartnerId(item.optJSONArray("partnerIds").optString(0));
+                course = gson.fromJson(item.toString(),Course.class);
             }
         }
         return course;

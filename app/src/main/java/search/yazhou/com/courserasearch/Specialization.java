@@ -2,6 +2,8 @@ package search.yazhou.com.courserasearch;
 
 import android.graphics.PorterDuff;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -12,25 +14,7 @@ public class Specialization extends Model {
 
     private int totoalCourseNum;
 
-    private String specializationId = "";
-
     private ArrayList<String> coursesIds = new ArrayList<>();
-
-    public int getTotoalCourseNum() {
-        return totoalCourseNum;
-    }
-
-    public void setTotoalCourseNum(int totoalCourseNum) {
-        this.totoalCourseNum = totoalCourseNum;
-    }
-
-    public String getSpecializationId() {
-        return specializationId;
-    }
-
-    public void setSpecializationId(String specializationId) {
-        this.specializationId = specializationId;
-    }
 
     public ArrayList<String> getCoursesIds() {
         return coursesIds;

@@ -11,15 +11,16 @@ public class Model {
     @SerializedName("id")
     private String Id = "";
 
-    @SerializedName(value = "photoUrl",alternate = {"logo","photoUrl"})
+    @SerializedName(value = "photoUrl",alternate = {"logo"})
     private String photoUrl = "";
 
-    @SerializedName("discription")
+    @SerializedName("description")
     private String discription = "";
 
     private String universityName = "";
 
-    private String partnerId = "";
+    @SerializedName("partnerIds")
+    private String[] partnerIds;
 
     public String getId() {
         return Id;
@@ -45,12 +46,12 @@ public class Model {
         this.discription = discription;
     }
 
-    public String getPartnerId() {
-        return partnerId;
+    public String[] getPartnerId() {
+        return partnerIds;
     }
 
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
+    public void setPartnerId(String[] partnerId) {
+        this.partnerIds = partnerId;
     }
 
     public String getUniversityName() {

@@ -39,9 +39,17 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("s",query);
+                Log.d("s", query);
                 mSearchView.clearFocus();
                 // now we need to search some course online
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetworkTask networkTask = new NetworkTask();
+                        Specialization specialization = networkTask.loadSpicalizationDetail("Q7ft0KTtEeWVehLHxyUMyQ", "fields=logo,description,partnerIds");
+                    }
+                });
+                thread.start();
                 return false;
             }
 
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void updateCourseList(List<Model> datalist){
+    public void updateCourseList(List<Model> datalist) {
 
     }
 
