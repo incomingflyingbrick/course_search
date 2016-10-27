@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -34,6 +36,7 @@ public class NetworkTask {
     }
 
     public List<Model> loadCourses(String url) {
+
         List<Model> dataList = new ArrayList<Model>();
         Request request = new Request.Builder().url(url).build();
         try {
@@ -49,6 +52,7 @@ public class NetworkTask {
         } catch (IOException e) {
 
         } catch (Exception e) {
+            Log.e("e", e.getMessage());
         }
 
         return dataList;
@@ -56,18 +60,33 @@ public class NetworkTask {
 
     private void parseJSONArray(List<Model> dataList, JSONObject jsonObject) {
         JSONObject obj = jsonObject.optJSONObject("linked");
-        JSONArray uniArray = jsonObject.optJSONArray("partners.v1");
+        JSONArray uniArray = obj.optJSONArray("partners.v1");
         ArrayList<Model> modelArrayList = new ArrayList<Model>();
-        for (int i = 0; i < uniArray.length(); i++) {
-            JSONObject item = uniArray.optJSONObject(i);
-            if (item != null) {
-                Model model = new Model();
-                modelArrayList.add(pareUni(item, model));
+        if (uniArray!=null) {
+            for (int i = 0; i < uniArray.length(); i++) {
+                JSONObject item = uniArray.optJSONObject(i);
+                if (item != null) {
+                    Model model = new Model();
+                    modelArrayList.add(pareUni(item, model));
+                }
             }
         }
+
+        Collections.sort(modelArrayList, new Comparator<Model>() {
+            @Override
+            public int compare(Model o1, Model o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+
+        Gson gson = new Gson();
+        Log.d("d",gson.toJson(modelArrayList));
+
         //course
         JSONArray array = obj.optJSONArray("courses.v1");
-        if (array != null) {
+        if (array != null)
+
+        {
             ArrayList<Model> courseModel = new ArrayList<Model>();
             for (int i = 0; i < array.length(); i++) {
                 JSONObject item = array.optJSONObject(i);
@@ -78,10 +97,20 @@ public class NetworkTask {
                 }
             }
         }
+
         // specialization
         JSONArray speArray = obj.optJSONArray("onDemandSpecializations.v1");
-        for (int i = 0; i < speArray.length(); i++) {
+        if (speArray != null)
 
+        {
+            ArrayList<Model> specializationList = new ArrayList<Model>();
+            for (int i = 0; i < speArray.length(); i++) {
+                JSONObject item = speArray.optJSONObject(i);
+                if (item != null) {
+                    Specialization specialization = new Specialization();
+                    specializationList.add(parseSepcialization(specialization, item));
+                }
+            }
         }
 
 
@@ -94,16 +123,15 @@ public class NetworkTask {
             Gson gson = new Gson();
             for (int i = 0; i < obj.length(); i++) {
                 JSONObject item = obj.optJSONObject(i);
-                Log.d("d",item.toString());
-                specialization = gson.fromJson(item.toString(),Specialization.class);
+                specialization = gson.fromJson(item.toString(), Specialization.class);
             }
         }
         return specialization;
     }
 
     private Model pareUni(JSONObject jsonObject, Model model) {
-        //model.setPartnerId(jsonObject.optString("id"));
         model.setUniversityName(jsonObject.optString("name"));
+        model.setId(jsonObject.optString("id"));
         return model;
     }
 
@@ -123,7 +151,7 @@ public class NetworkTask {
             }
         } catch (IOException e) {
 
-        } catch(JSONException e){
+        } catch (JSONException e) {
 
         }
 
@@ -141,13 +169,13 @@ public class NetworkTask {
             if (response.isSuccessful()) {
                 JSONObject obj = new JSONObject(response.body().string());
                 specialization = parseSepcialization(specialization, obj);
-            }else{
+            } else {
                 specialization = null;
             }
         } catch (IOException e) {
 
-        } catch(JSONException e){
-            Log.d("json",""+e.getMessage());
+        } catch (JSONException e) {
+
         }
         return specialization;
     }
@@ -158,7 +186,7 @@ public class NetworkTask {
             Gson gson = new Gson();
             for (int i = 0; i < obj.length(); i++) {
                 JSONObject item = obj.optJSONObject(i);
-                course = gson.fromJson(item.toString(),Course.class);
+                course = gson.fromJson(item.toString(), Course.class);
             }
         }
         return course;

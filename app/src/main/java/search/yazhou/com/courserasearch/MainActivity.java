@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         NetworkTask networkTask = new NetworkTask();
-                        Specialization specialization = networkTask.loadSpicalizationDetail("Q7ft0KTtEeWVehLHxyUMyQ", "fields=logo,description,partnerIds");
+                        //networkTask.loadSpicalizationDetail("Q7ft0KTtEeWVehLHxyUMyQ", "fields=logo,description,partnerIds");
+                        networkTask.loadCourses("https://www.coursera.org/api/catalogResults.v2?q=search&query=machine%20learning&start=0&limit=5&fields=courseId,onDemandSpecializationId,courses.v1(name,photoUrl,partnerIds),onDemandSpecializations.v1(name,logo,courseIds,partnerIds),partners.v1(name)&includes=courseId,onDemandSpecializationId,courses.v1(partnerIds)");
                     }
                 });
                 thread.start();
