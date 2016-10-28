@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -43,21 +45,37 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
 
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater =(LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return new SearchViewHolder(inflater.inflate(R.layout.course_list,parent,false));
     }
 
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
+        int type = getItemViewType(position);
+        Course course;
+        Specialization specialization;
+        if(type == COURSE){
+            course = (Course)mModelList.get(position);
+            setData(course,holder);
+        }else{
+            specialization =(Specialization) mModelList.get(position);
+            setData(specialization,holder);
+        }
+    }
 
+    private void setData(Model model, SearchViewHolder viewHolder)
+    {
+        viewHolder.mCourseTextView.setText(model.getName());
+        viewHolder.mUniversityTextView.setText(model.getUniversityName());
+        Picasso.with(mContext).load(model.getPhotoUrl()).into(viewHolder.mImageView);
     }
 
     static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView mImageView;
-        TextView mCourseTextView;
-        TextView mUniversityTextView;
-        TextView mCourseCountTextView;
+        public ImageView mImageView;
+        public TextView mCourseTextView;
+        public TextView mUniversityTextView;
+        public TextView mCourseCountTextView;
 
         public SearchViewHolder(View itemView) {
             super(itemView);

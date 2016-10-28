@@ -22,6 +22,25 @@ public class Model {
     @SerializedName("partnerIds")
     private String[] partnerIds;
 
+    @SerializedName("name")
+    private String name = "";
+
+    public String[] getPartnerIds() {
+        return partnerIds;
+    }
+
+    public void setPartnerIds(String[] partnerIds) {
+        this.partnerIds = partnerIds;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getId() {
         return Id;
     }

@@ -1,15 +1,20 @@
 package search.yazhou.com.courserasearch;
 
+import android.app.ProgressDialog;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private Toolbar mToolBar;
 
@@ -17,7 +22,15 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
 
+    private SearchViewAdapter mSearchViewAdapter;
+
+    private LinearLayoutManager mLayoutManager;
+
     private CoursePresenter mPresenter;
+
+    private ArrayList<Model> mDataList  = new ArrayList<>();
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         // find views !!!
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mSearchView = (SearchView) findViewById(R.id.search_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mProgressDialog = new ProgressDialog(this);
         setSupportActionBar(mToolBar);
 
         // setting up search manager
@@ -41,16 +58,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 Log.d("s", query);
                 mSearchView.clearFocus();
-                // now we need to search some course online
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        NetworkTask networkTask = new NetworkTask();
-                        //networkTask.loadSpicalizationDetail("Q7ft0KTtEeWVehLHxyUMyQ", "fields=logo,description,partnerIds");
-                        networkTask.loadCourses("https://www.coursera.org/api/catalogResults.v2?q=search&query=machine%20learning&start=0&limit=5&fields=courseId,onDemandSpecializationId,courses.v1(name,photoUrl,partnerIds),onDemandSpecializations.v1(name,logo,courseIds,partnerIds),partners.v1(name)&includes=courseId,onDemandSpecializationId,courses.v1(partnerIds)");
-                    }
-                });
-                thread.start();
+                mPresenter.getCourseList();
                 return false;
             }
 
@@ -61,12 +69,37 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
-
-
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(mLayoutManager.findLastCompletelyVisibleItemPosition()==mDataList.size()-1){
+                    mPresenter.getCourseList();
+                }
+            }
+        });
     }
 
     public void updateCourseList(List<Model> datalist) {
+        if(mSearchViewAdapter==null){
+            mSearchViewAdapter = new SearchViewAdapter(this,datalist);
+            mRecyclerView.setAdapter(mSearchViewAdapter);
+        }
+        mDataList.addAll(datalist);
+        mSearchViewAdapter.notifyDataSetChanged();
+    }
 
+    public void showDialog(){
+        if(!mProgressDialog.isShowing()){
+            mProgressDialog.show();
+        }
+
+    }
+
+    public void dismissDialog(){
+        if(mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
     }
 
 

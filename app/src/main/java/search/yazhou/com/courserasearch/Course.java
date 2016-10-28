@@ -8,15 +8,4 @@ import com.google.gson.annotations.SerializedName;
 
 public class Course extends Model{
 
-    @SerializedName("name")
-    private String courseName = "";
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
 }

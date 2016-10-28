@@ -5,27 +5,35 @@
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/course_iv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:paddingRight="5dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         />
     <TextView
         android:id="@+id/course_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_alignTop="@+id/course_iv"
         android:layout_toRightOf="@+id/course_iv"/>
 
     <TextView
         android:id="@+id/course_uni_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="italic"
         android:layout_toRightOf="@+id/course_iv"
+        android:paddingTop="3dp"
         android:layout_below="@+id/course_name_tv"/>
 
     <TextView
         android:id="@+id/course_counte_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/course_uni_name_tv"/>
+        android:layout_toRightOf="@+id/course_uni_name_tv"
+        android:layout_alignTop="@+id/course_name_tv"/>
 
 </RelativeLayout>
