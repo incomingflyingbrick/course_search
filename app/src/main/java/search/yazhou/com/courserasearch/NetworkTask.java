@@ -75,24 +75,22 @@ public class NetworkTask {
             }
         }
 
-        Gson gson = new Gson();
-        Log.d("d", gson.toJson(universityMap));
-
         //course
         JSONArray array = obj.optJSONArray("courses.v1");
-        ArrayList<Model> courseModel = new ArrayList<Model>();
+
         if (array != null && array.length() > 0) {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject item = array.optJSONObject(i);
                 if (item != null) {
-                    Course course = new Course();
-                    parseCourse(course, item);
-                    courseModel.add(course);
+                    Course course = null;
+                    course = parseCourse(course, item);
+                    if(course!=null){
+                        course.setUniversityName(universityMap.get(course.getPartnerId()[0]));
+                    }
+                    dataList.add(course);
                 }
             }
         }
-        Log.d("d", gson.toJson(courseModel));
-
 
         // specialization
         JSONArray speArray = obj.optJSONArray("onDemandSpecializations.v1");
@@ -104,13 +102,11 @@ public class NetworkTask {
                 if (item != null) {
                     Specialization specialization = new Specialization();
                     specialization = parseSepcialization(specialization, item);
-                    specialization.setUniversityName(universityMap.get(specialization.getPartnerId()));
-                    Log.d("d",specialization.getUniversityName());
-                    courseModel.add(specialization);
+                    specialization.setUniversityName(universityMap.get(specialization.getPartnerId()[0]));
+                    dataList.add(specialization);
                 }
             }
         }
-        Log.d("d", gson.toJson(courseModel));
 
     }
 
@@ -175,10 +171,10 @@ public class NetworkTask {
         return specialization;
     }
 
-    private Course parseCourse(Course course, JSONObject jsonObject) {
+    private Course parseCourse(Course courses, JSONObject jsonObject) {
         Gson gson = new Gson();
-        course = gson.fromJson(jsonObject.toString(), Course.class);
-        return course;
+        courses = gson.fromJson(jsonObject.toString(), Course.class);
+        return courses;
     }
 
 
