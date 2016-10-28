@@ -1,5 +1,6 @@
 package search.yazhou.com.courserasearch;
 
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -61,33 +63,25 @@ public class NetworkTask {
     private void parseJSONArray(List<Model> dataList, JSONObject jsonObject) {
         JSONObject obj = jsonObject.optJSONObject("linked");
         JSONArray uniArray = obj.optJSONArray("partners.v1");
-        ArrayList<Model> modelArrayList = new ArrayList<Model>();
-        if (uniArray!=null) {
+        ArrayMap<String, String> universityMap = new ArrayMap<String, String>();
+        if (uniArray != null) {
             for (int i = 0; i < uniArray.length(); i++) {
                 JSONObject item = uniArray.optJSONObject(i);
                 if (item != null) {
                     Model model = new Model();
-                    modelArrayList.add(pareUni(item, model));
+                    pareUni(item, model);
+                    universityMap.put(model.getId(), model.getUniversityName());
                 }
             }
         }
 
-        Collections.sort(modelArrayList, new Comparator<Model>() {
-            @Override
-            public int compare(Model o1, Model o2) {
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
-
         Gson gson = new Gson();
-        Log.d("d",gson.toJson(modelArrayList));
+        Log.d("d", gson.toJson(universityMap));
 
         //course
         JSONArray array = obj.optJSONArray("courses.v1");
-        if (array != null)
-
-        {
-            ArrayList<Model> courseModel = new ArrayList<Model>();
+        ArrayList<Model> courseModel = new ArrayList<Model>();
+        if (array != null && array.length() > 0) {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject item = array.optJSONObject(i);
                 if (item != null) {
@@ -97,34 +91,35 @@ public class NetworkTask {
                 }
             }
         }
+        Log.d("d", gson.toJson(courseModel));
+
 
         // specialization
         JSONArray speArray = obj.optJSONArray("onDemandSpecializations.v1");
-        if (speArray != null)
 
-        {
-            ArrayList<Model> specializationList = new ArrayList<Model>();
+        if (speArray != null && speArray.length() > 0) {
+
             for (int i = 0; i < speArray.length(); i++) {
                 JSONObject item = speArray.optJSONObject(i);
                 if (item != null) {
                     Specialization specialization = new Specialization();
-                    specializationList.add(parseSepcialization(specialization, item));
+                    specialization = parseSepcialization(specialization, item);
+                    specialization.setUniversityName(universityMap.get(specialization.getPartnerId()));
+                    Log.d("d",specialization.getUniversityName());
+                    courseModel.add(specialization);
                 }
             }
         }
-
+        Log.d("d", gson.toJson(courseModel));
 
     }
 
-    private Specialization parseSepcialization(Specialization specialization, JSONObject jsonObject) {
-        JSONArray obj = jsonObject.optJSONArray("elements");
+    private Specialization parseSepcialization(Specialization specialization, JSONObject obj) {
         if (obj != null) {
 
             Gson gson = new Gson();
-            for (int i = 0; i < obj.length(); i++) {
-                JSONObject item = obj.optJSONObject(i);
-                specialization = gson.fromJson(item.toString(), Specialization.class);
-            }
+            specialization = gson.fromJson(obj.toString(), Specialization.class);
+
         }
         return specialization;
     }
@@ -181,14 +176,8 @@ public class NetworkTask {
     }
 
     private Course parseCourse(Course course, JSONObject jsonObject) {
-        JSONArray obj = jsonObject.optJSONArray("elements");
-        if (obj != null) {
-            Gson gson = new Gson();
-            for (int i = 0; i < obj.length(); i++) {
-                JSONObject item = obj.optJSONObject(i);
-                course = gson.fromJson(item.toString(), Course.class);
-            }
-        }
+        Gson gson = new Gson();
+        course = gson.fromJson(jsonObject.toString(), Course.class);
         return course;
     }
 

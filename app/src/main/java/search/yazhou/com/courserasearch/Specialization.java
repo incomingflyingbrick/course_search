@@ -14,13 +14,14 @@ public class Specialization extends Model {
 
     private int totoalCourseNum;
 
-    private ArrayList<String> coursesIds = new ArrayList<>();
+    @SerializedName("courseIds")
+    private  String [] coursesIds;
 
-    public ArrayList<String> getCoursesIds() {
+    public String [] getCoursesIds() {
         return coursesIds;
     }
 
-    public void setCoursesIds(ArrayList<String> coursesIds) {
+    public void setCoursesIds(String [] coursesIds) {
         this.coursesIds = coursesIds;
     }
 }
