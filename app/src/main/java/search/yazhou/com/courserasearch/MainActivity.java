@@ -11,9 +11,12 @@ import android.text.TextUtils;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolBar;
 
@@ -27,9 +30,15 @@ public class MainActivity extends AppCompatActivity{
 
     private CoursePresenter mPresenter;
 
-    private ArrayList<Model> mDataList  = new ArrayList<>();
+    private ArrayList<Model> mDataList = new ArrayList<>();
 
     private ProgressDialog mProgressDialog;
+
+    private String mQuery = "";
+
+    private int mPage = 0;
+
+    private int mLimit = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +64,11 @@ public class MainActivity extends AppCompatActivity{
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(!TextUtils.isEmpty(query)){
+                if (!TextUtils.isEmpty(query)) {
+                    mQuery = query;// record the last keyword entered by user
+                    mPage = 0;
                     mSearchView.clearFocus();
-                    mPresenter.getCourseList(query);
+                    mPresenter.getCourseList(query, 0, mLimit);
                 }
                 return false;
             }
@@ -73,39 +84,38 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(mLayoutManager.findLastCompletelyVisibleItemPosition()==mDataList.size()-1){
-                    mPresenter.getCourseList("");
+                if (mLayoutManager.findLastCompletelyVisibleItemPosition() == mDataList.size() - 1) {
+                    mPage += mLimit;
+                    mPresenter.getCourseList(mQuery, mPage, mLimit);
                 }
             }
         });
     }
 
     public void updateCourseList(List<Model> datalist) {
-        if(mSearchViewAdapter==null){
-            mSearchViewAdapter = new SearchViewAdapter(this,mDataList);
+        if (mSearchViewAdapter == null) {
+            mSearchViewAdapter = new SearchViewAdapter(this, mDataList);
             mRecyclerView.setAdapter(mSearchViewAdapter);
+        }
+        if (mPage == 0) {
+            mDataList.clear();
         }
         mDataList.addAll(datalist);
         mSearchViewAdapter.notifyDataSetChanged();
     }
 
-    public void showDialog(){
-        if(!mProgressDialog.isShowing()){
+    public void showDialog() {
+        if (!mProgressDialog.isShowing()) {
             mProgressDialog.setMessage(getString(R.string.search_loading));
             mProgressDialog.show();
         }
 
     }
 
-    public void dismissDialog(){
-        if(mProgressDialog.isShowing()){
+    public void dismissDialog() {
+        if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
     }
-
-    public void clearListResult(){
-        mDataList.clear();
-    }
-
 
 }
