@@ -1,15 +1,14 @@
 package search.yazhou.com.courserasearch;
 
 import android.app.ProgressDialog;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
+import android.text.TextUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +55,10 @@ public class MainActivity extends AppCompatActivity{
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("s", query);
-                mSearchView.clearFocus();
-                mPresenter.getCourseList();
+                if(!TextUtils.isEmpty(query)){
+                    mSearchView.clearFocus();
+                    mPresenter.getCourseList(query);
+                }
                 return false;
             }
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity{
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(mLayoutManager.findLastCompletelyVisibleItemPosition()==mDataList.size()-1){
-                    mPresenter.getCourseList();
+                    mPresenter.getCourseList("");
                 }
             }
         });
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void updateCourseList(List<Model> datalist) {
         if(mSearchViewAdapter==null){
-            mSearchViewAdapter = new SearchViewAdapter(this,datalist);
+            mSearchViewAdapter = new SearchViewAdapter(this,mDataList);
             mRecyclerView.setAdapter(mSearchViewAdapter);
         }
         mDataList.addAll(datalist);
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void showDialog(){
         if(!mProgressDialog.isShowing()){
+            mProgressDialog.setMessage(getString(R.string.search_loading));
             mProgressDialog.show();
         }
 
@@ -100,6 +101,10 @@ public class MainActivity extends AppCompatActivity{
         if(mProgressDialog.isShowing()){
             mProgressDialog.dismiss();
         }
+    }
+
+    public void clearListResult(){
+        mDataList.clear();
     }
 
 

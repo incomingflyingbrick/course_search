@@ -2,11 +2,13 @@ package search.yazhou.com.courserasearch;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by umeng on 10/26/16.
  */
 
-public class Model {
+public class Model implements Serializable{
 
     @SerializedName("id")
     private String Id = "";

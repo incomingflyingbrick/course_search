@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CourseraSearch</string>
-    <string name="search_hint">You need to study!</string>
+    <string name="search_hint">Search your favorite course and socialization!</string>
+    <string name="search_loading">Loading the best course in the world...</string>
 </resources>
