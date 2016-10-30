@@ -19,6 +19,7 @@ import java.util.List;
 
 public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.SearchViewHolder> {
 
+    private OnItemClickListener onItemClickLitener;
     private Context mContext;
     private static final int COURSE = 2;
     private static final int SPECIALIZATION = 1;
@@ -52,7 +53,7 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
     }
 
     @Override
-    public void onBindViewHolder(SearchViewHolder holder, int position) {
+    public void onBindViewHolder(final SearchViewHolder holder, final int position) {
         int type = getItemViewType(position);
         Course course;
         Specialization specialization;
@@ -62,6 +63,14 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
         }else{
             specialization =(Specialization) mModelList.get(position);
             setData(specialization,holder);
+        }
+        if(onItemClickLitener!=null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickLitener.onItemClick(holder.itemView,position);
+                }
+            });
         }
     }
 
@@ -82,12 +91,24 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
         TextView mUniversityTextView;
         TextView mCourseCountTextView;
 
+
         public SearchViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.course_iv);
             mCourseTextView = (TextView) itemView.findViewById(R.id.course_name_tv);
             mCourseCountTextView = (TextView) itemView.findViewById(R.id.course_counte_tv);
             mUniversityTextView = (TextView) itemView.findViewById(R.id.course_uni_name_tv);
+            itemView.setBackgroundResource(R.drawable.background_selector);
         }
+    }
+
+    public void setOnItemClickLitener(OnItemClickListener onItemClickLitener)
+    {
+        this.onItemClickLitener = onItemClickLitener;
+    }
+
+    public interface OnItemClickListener
+    {
+        void onItemClick(View view, int position);
     }
 }

@@ -4,7 +4,7 @@ import android.graphics.PorterDuff;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+
 
 /**
  * Created by umeng on 10/26/16.

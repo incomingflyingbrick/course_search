@@ -15,7 +15,7 @@ public class CoursePresenter {
 
     public void getCourseList(String query, int page, int limit) {
 
-        new MyTask(mActivity).execute("https://www.coursera.org/api/catalogResults.v2?q=search&query=" + query + "&start=" + page + "&limit=" + limit + "&fields=courseId,onDemandSpecializationId,courses.v1(name,photoUrl,partnerIds),onDemandSpecializations.v1(name,logo,courseIds,partnerIds),partners.v1(name)&includes=courseId,onDemandSpecializationId,courses.v1(partnerIds)");
+        new MyTask(mActivity).execute("https://www.coursera.org/api/catalogResults.v2?q=search&query=" + query + "&start=" + page + "&limit=" + limit + "&fields=courseId,onDemandSpecializationId,courses.v1(name,photoUrl,partnerIds,description),onDemandSpecializations.v1(name,logo,courseIds,partnerIds,description),partners.v1(name)&includes=courseId,onDemandSpecializationId,courses.v1(partnerIds)");
 
     }
 

@@ -1,6 +1,7 @@
 package search.yazhou.com.courserasearch;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,13 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchViewAdapter.OnItemClickListener{
 
     private Toolbar mToolBar;
 
@@ -91,8 +94,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCourseList(List<Model> datalist) {
+        if(datalist==null || datalist.size()==0){
+            Toast.makeText(this,getString(R.string.no_result),Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (mSearchViewAdapter == null) {
             mSearchViewAdapter = new SearchViewAdapter(this, mDataList);
+            mSearchViewAdapter.setOnItemClickLitener(this);
             mRecyclerView.setAdapter(mSearchViewAdapter);
         }
         if (mPage == 0) {
@@ -100,6 +109,13 @@ public class MainActivity extends AppCompatActivity {
         }
         mDataList.addAll(datalist);
         mSearchViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(this,CourseDetailActivity.class);
+        intent.putExtra("courseObj",mDataList.get(position));
+        startActivity(intent);
     }
 
     public void showDialog() {

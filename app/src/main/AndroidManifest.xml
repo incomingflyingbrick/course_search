@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CourseDetailActivity"
+        <activity
+            android:theme="@style/CourseDetail"
+            android:name=".CourseDetailActivity"
             android:launchMode="singleInstance"></activity>
     </application>
 

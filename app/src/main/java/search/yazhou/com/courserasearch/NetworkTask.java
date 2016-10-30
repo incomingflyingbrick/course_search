@@ -4,8 +4,7 @@ import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,9 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -127,19 +124,15 @@ public class NetworkTask {
         return model;
     }
 
-    public Course loadCourseDetail(String courseId, String field) {
-        Course course = null;
+    public void loadCourseDetail(Course course, String field) {
         Request request = new Request.Builder()
-                .url(courseUrl + courseId + "?" + field)
+                .url(courseUrl + course.getId() + "?" + field)
                 .build();
         try {
 
             Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful()) {
-                course = parseCourse(course, new JSONObject(response.body().string()));
-
-            } else {
-                course = null;
+                parseCourse(course, new JSONObject(response.body().string()));
             }
         } catch (IOException e) {
 
@@ -147,7 +140,7 @@ public class NetworkTask {
 
         }
 
-        return course;
+
     }
 
     public Specialization loadSpicalizationDetail(String specialId, String field) {
