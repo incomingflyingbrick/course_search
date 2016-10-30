@@ -81,7 +81,7 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
         if(model instanceof Specialization){
             viewHolder.mCourseCountTextView.setText(((Specialization)model).getTotoalCourseNum()+" "+mContext.getString(R.string.courses));
         }
-        Picasso.with(mContext).load(model.getPhotoUrl()).into(viewHolder.mImageView);
+        Picasso.with(mContext).load(model.getPhotoUrl()).placeholder(android.R.drawable.sym_def_app_icon).into(viewHolder.mImageView);
     }
 
     static class SearchViewHolder extends RecyclerView.ViewHolder {

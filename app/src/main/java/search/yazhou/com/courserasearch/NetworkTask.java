@@ -81,7 +81,7 @@ public class NetworkTask {
                 if (item != null) {
                     Course course = null;
                     course = parseCourse(course, item);
-                    if(course!=null){
+                    if (course != null) {
                         course.setUniversityName(universityMap.get(course.getPartnerId()[0]));
                     }
                     dataList.add(course);
@@ -129,7 +129,6 @@ public class NetworkTask {
                 .url(courseUrl + course.getId() + "?" + field)
                 .build();
         try {
-
             Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 parseCourse(course, new JSONObject(response.body().string()));
@@ -166,8 +165,10 @@ public class NetworkTask {
     }
 
     private Course parseCourse(Course courses, JSONObject jsonObject) {
-        Gson gson = new Gson();
-        courses = gson.fromJson(jsonObject.toString(), Course.class);
+        if (jsonObject != null) {
+            Gson gson = new Gson();
+            courses = gson.fromJson(jsonObject.toString(), Course.class);
+        }
         return courses;
     }
 
