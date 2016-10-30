@@ -10,6 +10,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
 
     private int mLimit = 15;
 
+    private TextView mTextViewPlaceHolder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mSearchView = (SearchView) findViewById(R.id.search_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mTextViewPlaceHolder = (TextView) findViewById(R.id.place_holder_tv);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mProgressDialog = new ProgressDialog(this);
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
     }
 
     public void updateCourseList(List<Model> datalist) {
+
         if(datalist==null || datalist.size()==0){
             Toast.makeText(this,getString(R.string.no_result),Toast.LENGTH_SHORT).show();
             return;
@@ -104,11 +109,19 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
             mSearchViewAdapter.setOnItemClickLitener(this);
             mRecyclerView.setAdapter(mSearchViewAdapter);
         }
+
         if (mPage == 0) {
             mDataList.clear();
         }
         mDataList.addAll(datalist);
+
         mSearchViewAdapter.notifyDataSetChanged();
+
+        if(mRecyclerView.getAdapter().getItemCount()==0){
+            mTextViewPlaceHolder.setVisibility(View.VISIBLE);
+        }else{
+            mTextViewPlaceHolder.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -4,4 +4,5 @@
     <string name="search_loading">Loading the best courses in the world...</string>
     <string name="courses">courses</string>
     <string name="no_result">No result</string>
+    <string name="no_data">Start your search at the top dude!</string>
 </resources>
