@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         }else{
             mTextViewPlaceHolder.setVisibility(View.GONE);
         }
+        // remove duplication
     }
 
     @Override
