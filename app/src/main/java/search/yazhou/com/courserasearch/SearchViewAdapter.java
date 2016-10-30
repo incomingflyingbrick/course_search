@@ -2,6 +2,7 @@ package search.yazhou.com.courserasearch;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
 
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d("s","onCreateViewHolder called");
         LayoutInflater inflater =(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return new SearchViewHolder(inflater.inflate(R.layout.course_list,parent,false));
     }
@@ -67,15 +69,18 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewAdapter.Se
     {
         viewHolder.mCourseTextView.setText(model.getName());
         viewHolder.mUniversityTextView.setText(model.getUniversityName());
+        if(model instanceof Specialization){
+            viewHolder.mCourseCountTextView.setText(((Specialization)model).getTotoalCourseNum()+" "+mContext.getString(R.string.courses));
+        }
         Picasso.with(mContext).load(model.getPhotoUrl()).into(viewHolder.mImageView);
     }
 
     static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView mImageView;
-        public TextView mCourseTextView;
-        public TextView mUniversityTextView;
-        public TextView mCourseCountTextView;
+        ImageView mImageView;
+        TextView mCourseTextView;
+        TextView mUniversityTextView;
+        TextView mCourseCountTextView;
 
         public SearchViewHolder(View itemView) {
             super(itemView);

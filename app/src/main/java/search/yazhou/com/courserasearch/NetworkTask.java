@@ -103,6 +103,7 @@ public class NetworkTask {
                     Specialization specialization = new Specialization();
                     specialization = parseSepcialization(specialization, item);
                     specialization.setUniversityName(universityMap.get(specialization.getPartnerId()[0]));
+                    specialization.setTotoalCourseNum(specialization.getCoursesIds().length);
                     dataList.add(specialization);
                 }
             }

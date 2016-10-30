@@ -24,4 +24,12 @@ public class Specialization extends Model {
     public void setCoursesIds(String [] coursesIds) {
         this.coursesIds = coursesIds;
     }
+
+    public int getTotoalCourseNum() {
+        return totoalCourseNum;
+    }
+
+    public void setTotoalCourseNum(int totoalCourseNum) {
+        this.totoalCourseNum = totoalCourseNum;
+    }
 }
