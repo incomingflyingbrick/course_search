@@ -83,4 +83,13 @@ public class Model implements Serializable{
         this.universityName = universityName;
     }
 
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getId().equals(((Model)obj).getId());
+    }
 }

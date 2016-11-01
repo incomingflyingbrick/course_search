@@ -2,6 +2,7 @@ package search.yazhou.com.courserasearch;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -44,11 +48,14 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
 
     private TextView mTextViewPlaceHolder;
 
+    private Set<Model> hs = new HashSet<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPresenter = new CoursePresenter(this);
+        hs.addAll(mDataList);
     }
 
     @Override
@@ -112,8 +119,12 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         }
         if (mPage == 0) {
             mDataList.clear();
+            hs.clear();
         }
-        mDataList.addAll(datalist);
+
+        hs.addAll(datalist);
+        mDataList.clear();
+        mDataList.addAll(hs);
 
         mSearchViewAdapter.notifyDataSetChanged();
 
@@ -122,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         } else {
             mTextViewPlaceHolder.setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -137,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
             mProgressDialog.setMessage(getString(R.string.search_loading));
             mProgressDialog.show();
         }
-
     }
 
     public void dismissDialog() {
