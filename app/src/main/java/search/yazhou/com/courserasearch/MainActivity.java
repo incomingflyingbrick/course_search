@@ -48,14 +48,11 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
 
     private TextView mTextViewPlaceHolder;
 
-    private Set<Model> hs = new HashSet<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPresenter = new CoursePresenter(this);
-        hs.addAll(mDataList);
     }
 
     @Override
@@ -119,13 +116,23 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         }
         if (mPage == 0) {
             mDataList.clear();
-            hs.clear();
         }
 
-        hs.addAll(datalist);
-        mDataList.clear();
-        mDataList.addAll(hs);
+        ArrayList<Model> list = new ArrayList<>();
+        for(Model model : datalist){
+            boolean dup = false;
+            for(Model item:mDataList){
+                if(model.getId().equals(item.getId())){
+                    dup = true;
+                }
+            }
+            if(!dup){
+                list.add(model);
+            }
+        }
 
+        mDataList.addAll(list);
+        list = null;
         mSearchViewAdapter.notifyDataSetChanged();
 
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
