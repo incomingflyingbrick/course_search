@@ -123,7 +123,7 @@ public class NetworkTask {
         model.setId(jsonObject.optString("id"));
         return model;
     }
-
+    // not using this call for now, but save this for later
     public void loadCourseDetail(Course course, String field) {
         Request request = new Request.Builder()
                 .url(courseUrl + course.getId() + "?" + field)
@@ -141,7 +141,7 @@ public class NetworkTask {
 
 
     }
-
+    //unused for now , but save it for later
     public Specialization loadSpicalizationDetail(String specialId, String field) {
         Specialization specialization = new Specialization();
         Request request = new Request.Builder()

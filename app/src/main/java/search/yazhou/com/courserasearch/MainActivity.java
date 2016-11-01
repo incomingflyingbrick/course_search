@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
                 if (mLayoutManager.findLastCompletelyVisibleItemPosition() == mDataList.size() - 1) {
                     if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) return;
                     else {
-                        mPage += mLimit;
+                        mPage += mLimit;// next page
                         mPresenter.getCourseList(mQuery, mPage, mLimit);
                     }
                 }
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         }
 
         mDataList.addAll(list);
-        list = null;// gc easy
+        list.clear();
         mSearchViewAdapter.notifyDataSetChanged();// update view
 
         // place holder view controll logic
