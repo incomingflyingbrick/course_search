@@ -16,9 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+
+
 import java.util.List;
-import java.util.Set;
+
 
 
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
             Toast.makeText(this, getString(R.string.no_result), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        // set listener and adapter
         if (mSearchViewAdapter == null) {
             mSearchViewAdapter = new SearchViewAdapter(this, mDataList);
             mSearchViewAdapter.setOnItemClickLitener(this);
@@ -117,24 +118,26 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
         if (mPage == 0) {
             mDataList.clear();
         }
-
+        // remove duplication logic, could have done better using a LinkedHashSet
         ArrayList<Model> list = new ArrayList<>();
         for(Model model : datalist){
-            boolean dup = false;
+            boolean isDuplicated = false;
             for(Model item:mDataList){
                 if(model.getId().equals(item.getId())){
-                    dup = true;
+                    isDuplicated = true;
+                    break;
                 }
             }
-            if(!dup){
+            if(!isDuplicated){
                 list.add(model);
             }
         }
 
         mDataList.addAll(list);
-        list = null;
-        mSearchViewAdapter.notifyDataSetChanged();
+        list = null;// gc easy
+        mSearchViewAdapter.notifyDataSetChanged();// update view
 
+        // place holder view controll logic
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
             mTextViewPlaceHolder.setVisibility(View.VISIBLE);
         } else {
