@@ -9,16 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 
-public class MainActivity extends AppCompatActivity implements SearchViewAdapter.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements SearchViewAdapter.OnItemClickListener {
 
     private Toolbar mToolBar;
 
@@ -82,16 +85,17 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-
-
         });
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (mLayoutManager.findLastCompletelyVisibleItemPosition() == mDataList.size() - 1) {
-                    mPage += mLimit;
-                    mPresenter.getCourseList(mQuery, mPage, mLimit);
+                    if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) return;
+                    else {
+                        mPage += mLimit;
+                        mPresenter.getCourseList(mQuery, mPage, mLimit);
+                    }
                 }
             }
         });
@@ -99,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
 
     public void updateCourseList(List<Model> datalist) {
 
-        if(datalist==null || datalist.size()==0){
-            Toast.makeText(this,getString(R.string.no_result),Toast.LENGTH_SHORT).show();
+        if (datalist == null || datalist.size() == 0) {
+            Toast.makeText(this, getString(R.string.no_result), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
             mSearchViewAdapter.setOnItemClickLitener(this);
             mRecyclerView.setAdapter(mSearchViewAdapter);
         }
-
         if (mPage == 0) {
             mDataList.clear();
         }
@@ -117,18 +120,18 @@ public class MainActivity extends AppCompatActivity implements SearchViewAdapter
 
         mSearchViewAdapter.notifyDataSetChanged();
 
-        if(mRecyclerView.getAdapter().getItemCount()==0){
+        if (mRecyclerView.getAdapter().getItemCount() == 0) {
             mTextViewPlaceHolder.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mTextViewPlaceHolder.setVisibility(View.GONE);
         }
-        // remove duplication
+
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this,CourseDetailActivity.class);
-        intent.putExtra("courseObj",mDataList.get(position));
+        Intent intent = new Intent(this, CourseDetailActivity.class);
+        intent.putExtra("courseObj", mDataList.get(position));
         startActivity(intent);
     }
 

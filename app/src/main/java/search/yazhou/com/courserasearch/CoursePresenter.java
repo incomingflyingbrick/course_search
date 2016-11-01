@@ -2,6 +2,7 @@ package search.yazhou.com.courserasearch;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -38,17 +39,19 @@ public class CoursePresenter {
             NetworkTask networkTask = new NetworkTask();
             networkTask.loadSpicalizationDetail("Q7ft0KTtEeWVehLHxyUMyQ", "fields=logo,description,partnerIds");
             return networkTask.loadCourses(params[0]);
-
         }
 
         @Override
         protected void onPostExecute(List<Model> models) {
             super.onPostExecute(models);
             MainActivity mainActivity = (MainActivity) weakReference.get();
-            if (models != null && models.size() > 0 && mainActivity != null) {
+            if (mainActivity != null) {
                 mainActivity.dismissDialog();
-                mainActivity.updateCourseList(models);
+                if (models != null && models.size() > 0) {
+                    mainActivity.updateCourseList(models);
+                }
             }
+
         }
     }
 }
