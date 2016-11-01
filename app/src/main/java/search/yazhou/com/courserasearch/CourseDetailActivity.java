@@ -33,7 +33,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(getSupportActionBar()!=null){
-            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Detail");
         }
 
@@ -51,6 +51,12 @@ public class CourseDetailActivity extends AppCompatActivity {
             updateUI();
         }
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
     @Override
